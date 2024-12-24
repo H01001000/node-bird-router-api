@@ -1,0 +1,41 @@
+{
+  "name": "node-bird-router-api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "swc src --out-dir dist",
+    "build:types": "yarn build",
+    "test:unit": "mocha --no-warnings 'tests/unit/**/*.spec.ts'",
+    "test:unit-coverage": "c8 yarn test:unit",
+    "test:ci-unit": "c8 yarn test:unit --reporter mocha-junit-reporter",
+    "test:types": "tsc --noEmit",
+    "test:ci-copy-result-and-coverage": "shx mv test-results.xml ../../ && shx mv coverage ../../",
+    "lint": "eslint \"src/**/*.ts\"",
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec node --no-warnings=ExperimentalWarning --loader ts-node/esm --watch src src/index.ts"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.20.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.95",
+    "@types/chai-as-promised": "^7",
+    "@types/chai-subset": "^1",
+    "@types/mocha": "^10",
+    "@types/node": "^20.8.10",
+    "@types/sinon": "^17",
+    "c8": "^9.1.0",
+    "chai": "^5.0.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "mocha-junit-reporter": "^2.2.1",
+    "nodemon": "^3.0.1",
+    "sinon": "^17.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "5.4.5"
+  }
+}

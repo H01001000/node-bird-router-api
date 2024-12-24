@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nbcarey/mocharc-schema/master/mocha-rc.schema.json",
+  "require": "ts-node/register",
+  "loader": "ts-node/esm",
+  "recursive": true,
+  "timeout": 2000,
+  "watch-extensions": "ts",
+  "watch-files": [
+    "src",
+    "tests"
+  ],
+  "enable-source-maps": true,
+  "parallel": false
+}
