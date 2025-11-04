@@ -96,14 +96,14 @@ export interface ProtocolBgp {
   neighborAddress: string;
   neighborAS: number;
   localAS: number;
-  neighborID: string;
-  localCapabilities: BgpCapabilities;
-  neighborCapabilities: BgpCapabilities;
-  session: string[];
-  sourceAddress: string;
-  holdTimer: BgpTimer;
-  keepaliveTimer: BgpTimer;
-  sendHoldTimer: BgpTimer;
+  neighborID: string | undefined;
+  localCapabilities: BgpCapabilities | undefined;
+  neighborCapabilities: BgpCapabilities | undefined;
+  session: string[] | undefined;
+  sourceAddress: string | undefined;
+  holdTimer: BgpTimer | undefined;
+  keepaliveTimer: BgpTimer | undefined;
+  sendHoldTimer: BgpTimer | undefined;
 }
 
 export interface ProtocolPassiveBgp {

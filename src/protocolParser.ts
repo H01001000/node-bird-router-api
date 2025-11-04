@@ -80,7 +80,10 @@ export const protocolChannelParser = (text: string): ProtocolChannel => {
   };
 };
 
-export const protcoolCapabilitiesParser = (text: string): BgpCapabilities => {
+export const protcoolCapabilitiesParser = (
+  text: string | undefined,
+): BgpCapabilities | undefined => {
+  if (text === undefined) return undefined;
   return {
     multiprotocol: {
       afAnnounced:
@@ -105,8 +108,10 @@ export const protcoolCapabilitiesParser = (text: string): BgpCapabilities => {
   };
 };
 
-export const protocolBgpTimerParser = (text: string): BgpTimer => {
-  if (text === undefined) return text;
+export const protocolBgpTimerParser = (
+  text: string | undefined,
+): BgpTimer | undefined => {
+  if (text === undefined) return undefined;
   const [current, max] = text.split("/").map((n) => parseFloat(n));
   return { current, max };
 };
@@ -120,23 +125,23 @@ export const protocolBgpParser = (
   const neighborAddress = text.match(/Neighbor address: ([^\s]+)/)![1];
   const neighborAS = parseInt(text.match(/Neighbor AS: ([0-9]+)/)![1]);
   const localAS = parseInt(text.match(/Local AS: ([0-9]+)/)![1]);
-  const neighborID = text.match(/Neighbor ID: ([^\s]+)/)![1];
+  const neighborID = text.match(/Neighbor ID: ([^\s]+)/)?.[1];
   const localCapabilities = protcoolCapabilitiesParser(
-    text.match(/Local capabilities\n(.|\n)+?(?=Neighbor capabilities)/)![0],
+    text.match(/Local capabilities\n(.|\n)+?(?=Neighbor capabilities)/)?.[0],
   );
   const neighborCapabilities = protcoolCapabilitiesParser(
-    text.match(/Neighbor capabilities\n(.|\n)+?(?=Session:)/)![0],
+    text.match(/Neighbor capabilities\n(.|\n)+?(?=Session:)/)?.[0],
   );
-  const session = text.match(/Session: ([^\n]+)/)![1].split(" ");
-  const sourceAddress = text.match(/Source address: ([^\s]+)/)![1];
+  const session = text.match(/Session: ([^\n]+)/)?.[1].split(" ");
+  const sourceAddress = text.match(/Source address: ([^\s]+)/)?.[1];
   const holdTimer = protocolBgpTimerParser(
-    text.match(/Hold timer: ([0-9./]+)/)![1],
+    text.match(/Hold timer: ([0-9./]+)/)?.[1],
   );
   const keepaliveTimer = protocolBgpTimerParser(
-    text.match(/Keepalive timer: ([0-9./]+)/)![1],
+    text.match(/Keepalive timer: ([0-9./]+)/)?.[1],
   );
   const sendHoldTimer = protocolBgpTimerParser(
-    text.match(/Send hold timer: ([0-9./]+)/)![1],
+    text.match(/Send hold timer: ([0-9./]+)/)?.[1],
   );
 
   return {
