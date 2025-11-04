@@ -12,6 +12,7 @@ import {
   protocolChannelParser,
   protocolPassiveBgpParser,
 } from "./protocolParser.js";
+export * from "./types.js";
 
 export class Bird {
   private readonly socket: net.Socket;
@@ -152,7 +153,6 @@ export class Bird {
         /([a-zA-Z0-9_]+ +(?:Direct|Device|Static|Kernel|BGP)[ \-a-zA-Z0-9:.%_]+)\n+/gm,
       )
       .slice(1);
-
 
     const protocols: ProtocolAll[] = [];
     for (let i = 0; i < protocolGroups.length; i += 2) {
