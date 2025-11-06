@@ -106,7 +106,7 @@ export class Bird {
   async showProtocols(options: {
     name: string;
     all: true;
-  }): Promise<ProtocolAll>;
+  }): Promise<ProtocolAll | undefined>;
   async showProtocols(options: {
     name?: undefined;
     all: true;
@@ -118,13 +118,15 @@ export class Bird {
   async showProtocols(options: {
     name: string;
     all?: false;
-  }): Promise<Protocol>;
+  }): Promise<Protocol | undefined>;
   async showProtocols(options?: undefined): Promise<Protocol[]>;
   async showProtocols(options?: {
     name?: string;
     all?: boolean;
     raw?: boolean;
-  }): Promise<Protocol[] | Protocol | ProtocolAll | ProtocolAll[] | string> {
+  }): Promise<
+    Protocol[] | Protocol | ProtocolAll | ProtocolAll[] | undefined | string
+  > {
     const resp = await this.sendCommand(
       `show protocols ${options?.all ? "all" : ""}`,
     );
