@@ -101,7 +101,7 @@ export class Bird {
     all?: boolean;
     raw: true;
     name?: string;
-  }): Promise<string>;
+  }): Promise<string | undefined>;
   async showProtocols(options: { raw: true }): Promise<string>;
   async showProtocols(options: {
     name: string;
@@ -225,6 +225,9 @@ export class Bird {
 
     if (options?.name) {
       return protocols[0];
+    }
+    if (options?.raw) {
+      return undefined;
     }
     return protocols;
   }
