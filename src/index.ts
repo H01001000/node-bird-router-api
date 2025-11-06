@@ -164,9 +164,8 @@ export class Bird {
       .slice(1);
 
     const protocols: ProtocolAll[] = [];
-    for (let i = 0; i < protocolGroups.length; i += 2) {
-      const [name, proto, table, state, since, info] =
-        protocolGroups[i].split(" ");
+      if (options?.name && options.name !== name) continue;
+
 
       const protocol: Protocol = {
         name,
@@ -210,7 +209,7 @@ export class Bird {
     }
 
     if (options?.name) {
-      return protocols.find((p) => p.name === options.name)!;
+      return protocols[0];
     }
     return protocols;
   }
