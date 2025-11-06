@@ -101,6 +101,8 @@ export class Bird {
     return await reposonse;
   }
 
+  async showProtocols(options: { all: true; raw: true }): Promise<string>;
+  async showProtocols(options: { raw: true }): Promise<string>;
   async showProtocols(options: {
     name: string;
     all: true;
@@ -121,10 +123,15 @@ export class Bird {
   async showProtocols(options?: {
     name?: string;
     all?: boolean;
-  }): Promise<Protocol[] | Protocol | ProtocolAll | ProtocolAll[]> {
+    raw?: boolean;
+  }): Promise<Protocol[] | Protocol | ProtocolAll | ProtocolAll[] | string> {
     const resp = await this.sendCommand(
       `show protocols ${options?.all ? "all" : ""}`,
     );
+
+    if (options?.raw) {
+      return resp;
+    }
 
     if (!options?.all) {
       const protocols = resp
