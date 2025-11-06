@@ -81,11 +81,7 @@ export class Bird {
         resp += data.toString();
 
         if (data.toString().match(/^[0-9]{4} /m)) {
-          resolve(
-            resp
-              .replaceAll(/^([0-9]{4}(-|\s)?)|(^\s+)/gm, "")
-              .replaceAll(/  +/g, " "),
-          );
+          resolve(resp.replaceAll(/^([0-9]{4}(-|\s)?)/gm, ""));
           this.socket.removeListener("data", onData);
           if (this.socketLock!.length > 0) {
             this.socketLock!.shift()!(true);
@@ -101,7 +97,11 @@ export class Bird {
     return await reposonse;
   }
 
-  async showProtocols(options: { all: true; raw: true }): Promise<string>;
+  async showProtocols(options: {
+    all?: boolean;
+    raw: true;
+    name?: string;
+  }): Promise<string>;
   async showProtocols(options: { raw: true }): Promise<string>;
   async showProtocols(options: {
     name: string;
@@ -131,9 +131,11 @@ export class Bird {
       `show protocols ${options?.all ? "all" : ""}`,
     );
 
-    if (options?.raw) {
-      return resp;
-    }
+    // if (options?.raw) {
+    //   return resp;
+    // }
+
+    // resp = resp.replaceAll(/  +/g, " ")
 
     if (!options?.all) {
       const protocols = resp
@@ -164,8 +166,21 @@ export class Bird {
       .slice(1);
 
     const protocols: ProtocolAll[] = [];
+    for (let i = 16; i < protocolGroups.length; i += 2) {
+      const [name, proto, table, state, since, info] = protocolGroups[i]
+        .trim()
+        .replace(/\s\s+/g, " ")
+        .split(" ");
+
       if (options?.name && options.name !== name) continue;
 
+      if (options?.raw && options?.name) {
+        return protocolGroups[i] + "\n" + protocolGroups[i + 1];
+      }
+
+      const body = protocolGroups[i + 1]
+        .replace(/^  +/gm, "")
+        .replace(/  +/g, " ");
 
       const protocol: Protocol = {
         name,
@@ -183,7 +198,7 @@ export class Bird {
 
       const protocolWithChannels = {
         ...protocol,
-        channels: protocolGroups[i + 1]
+        channels: body
           .split("Channel ")
           .slice(1)
           .map((channel) => protocolChannelParser(channel)),
@@ -203,8 +218,8 @@ export class Bird {
         ...protocolWithChannels,
         bgp:
           protocolWithChannels.info === "Passive"
-            ? protocolPassiveBgpParser(protocolGroups[i + 1])!
-            : protocolBgpParser(protocolGroups[i + 1])!,
+            ? protocolPassiveBgpParser(body)!
+            : protocolBgpParser(body)!,
       });
     }
 
