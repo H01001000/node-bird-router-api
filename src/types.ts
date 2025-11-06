@@ -97,6 +97,8 @@ export interface ProtocolBgp {
   neighborAS: number;
   localAS: number;
   neighborID: string | undefined;
+  connectDelay: BgpTimer | undefined;
+  lastError: string | undefined;
   localCapabilities: BgpCapabilities | undefined;
   neighborCapabilities: BgpCapabilities | undefined;
   session: string[] | undefined;

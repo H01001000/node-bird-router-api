@@ -125,6 +125,10 @@ export const protocolBgpParser = (
   const neighborAddress = text.match(/Neighbor address: ([^\s]+)/)![1];
   const neighborAS = parseInt(text.match(/Neighbor AS: ([0-9]+)/)![1]);
   const localAS = parseInt(text.match(/Local AS: ([0-9]+)/)![1]);
+  const connectDelay = protocolBgpTimerParser(
+    text.match(/Connect delay: ([0-9./]+)/)?.[1],
+  );
+  const lastError = text.match(/Last error: ([^\n]+)/)?.[1];
   const neighborID = text.match(/Neighbor ID: ([^\s]+)/)?.[1];
   const localCapabilities = protcoolCapabilitiesParser(
     text.match(/Local capabilities\n(.|\n)+?(?=Neighbor capabilities)/)?.[0],
@@ -149,6 +153,8 @@ export const protocolBgpParser = (
     neighborAddress,
     neighborAS,
     localAS,
+    connectDelay,
+    lastError,
     neighborID,
     localCapabilities,
     neighborCapabilities,
