@@ -131,31 +131,36 @@ export class Bird {
       `show protocols ${options?.all ? "all" : ""}`,
     );
 
-    // if (options?.raw) {
-    //   return resp;
-    // }
-
-    // resp = resp.replaceAll(/  +/g, " ")
-
     if (!options?.all) {
-      const protocols = resp
+      const protocols = [];
+      const lines = resp
+        .replace(/^ +/gm, "")
+        .replace(/  +/g, " ")
         .split("\n")
-        .slice(1, -2)
-        .map((line) => {
-          const [name, proto, table, state, since, info] = line.split(" ");
-          return {
-            name,
-            proto: proto as Protocol["proto"],
-            table,
-            state,
-            since,
-            info,
-          };
-        });
+        .slice(1, -2);
+      for (const line of lines) {
+        const [name, proto, table, state, since, info] = line.split(" ");
+
+        if (options?.name && options.name !== name) {
+          continue;
+        }
+
+        const protocol = {
+          name,
+          proto: proto as Protocol["proto"],
+          table,
+          state,
+          since,
+          info,
+        };
+
+        protocols.push(protocol);
+      }
 
       if (options?.name) {
         return protocols[0];
       }
+
       return protocols;
     }
 
@@ -169,7 +174,7 @@ export class Bird {
     for (let i = 16; i < protocolGroups.length; i += 2) {
       const [name, proto, table, state, since, info] = protocolGroups[i]
         .trim()
-        .replace(/\s\s+/g, " ")
+        .replace(/  +/g, " ")
         .split(" ");
 
       if (options?.name && options.name !== name) continue;
@@ -179,7 +184,7 @@ export class Bird {
       }
 
       const body = protocolGroups[i + 1]
-        .replace(/^  +/gm, "")
+        .replace(/^ +/gm, "")
         .replace(/  +/g, " ");
 
       const protocol: Protocol = {
